@@ -45,7 +45,7 @@ The driveTraining.ipynb file contains the code for training and saving the convo
 
 My model consists of a convolution neural network as defined in Nvidia model (driveTraining.ipynb) 
 
-The model includes RELU layers to introduce nonlinearity , and the data is normalized in the model using a Keras lambda layer . 
+The model includes RELU layers to introduce nonlinearity , and the data is normalized in the model using a Keras lambda layer . The model also includes cropping of images on the top and bottom of the images thereby reducing the unneccessary features for prediction. BatchNormalization helped reduce the internal covariate shift of each batch there by acting as a regularizer and reducing the need for dropouts. The batch normalization helped avoid model making extreme turns in the driving. 
 
 ####2. Attempts to reduce overfitting in the model
 
@@ -77,8 +77,11 @@ At the end of the process, the vehicle is able to drive autonomously around the 
 
 ####2. Final Model Architecture
 
-The final model architecture (driveTraining.ipynb, create_model() function) consisted of a convolution neural network with the following layers and layer sizes ...
+The final model architecture (driveTraining.ipynb, create_model() function) consisted of cropping, image normalization, batch normalization, convolution neural network with the following layers and layer sizes ...
 
+    model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160,320,3)))    
+    model.add(Lambda(lambda x: x/127.5 - 1.,input_shape=(row, col,ch),output_shape=(row, col,ch)))    
+    model.add(BatchNormalization(epsilon=0.001,mode=2, axis=1,input_shape=(nrows,ncols,3)))
     model.add(Convolution2D(24,5,5,border_mode='valid', activation='relu', subsample=(2,2)))
     model.add(Convolution2D(36,5,5,border_mode='valid', activation='relu', subsample=(2,2)))
     model.add(Convolution2D(48,5,5,border_mode='valid', activation='relu', subsample=(2,2)))
